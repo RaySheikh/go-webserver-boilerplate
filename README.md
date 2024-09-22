@@ -21,5 +21,5 @@ This is a boilerplate for a simple web server built with Go, featuring structure
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/go-webserver-boilerplate.git
+git clone https://github.com/RaySheikh/go-webserver-boilerplate.git
 cd go-webserver-boilerplate
