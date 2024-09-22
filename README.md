@@ -1,20 +1,15 @@
-# Go Web Server Boilerplate
+# go-webserver-boilerplate
 
-This is a boilerplate for a simple web server built with Go, featuring structured logging, OpenTelemetry integration, and configuration management using Viper.
+A boilerplate project for building a RESTful web server in Go with structured logging, OpenTelemetry integration, and Prometheus metrics.
 
 ## Features
 
-- Simple web server with a sample endpoint
-- Structured logging with Logrus
-- OpenTelemetry for tracing
-- Configuration management using Viper (supports YAML and environment variables)
-- Docker support for building and running the application
+- **RESTful API**: Responds to HTTP requests.
+- **Structured Logging**: Uses Logrus for JSON formatted logs.
+- **OpenTelemetry**: Provides observability with tracing and metrics.
+- **Prometheus Metrics**: Exposes application metrics for monitoring. (port 8081/metrics)
+- **Configuration**: Utilizes a YAML configuration file with JSON tags in Go structs.
 
-## Prerequisites
-
-- Go 1.22 or later
-- Docker (for containerization)
-- Make (for managing build tasks)
 
 ## Getting Started
 
