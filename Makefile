@@ -54,5 +54,9 @@ docker-run: docker-build
 
 ## docker-clean: Removes the Docker image
 docker-clean:
-	@echo "Cleaning up Docker images..."
-	@docker rmi $(IMAGE_NAME) || true
+	@echo "Cleaning up Docker images and containers..."
+	@docker ps -q --filter "ancestor=$(IMAGE_NAME)" | xargs -r docker stop
+	@docker ps -a -q --filter "ancestor=$(IMAGE_NAME)" | xargs -r docker rm
+	@docker rmi -f $(IMAGE_NAME) || true
+
+
