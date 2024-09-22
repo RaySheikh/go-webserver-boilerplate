@@ -1,6 +1,15 @@
 module go-webserver-boilerplate
 
-go 1.22.6
+go 1.23.1
+
+require (
+	github.com/sirupsen/logrus v1.9.3
+	github.com/spf13/viper v1.19.0
+	go.opentelemetry.io/otel v1.30.0
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.30.0
+	go.opentelemetry.io/otel/sdk v1.30.0
+	go.opentelemetry.io/otel/trace v1.30.0
+)
 
 require (
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -15,19 +24,14 @@ require (
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
-	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/spf13/viper v1.19.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	go.opentelemetry.io/otel v1.30.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.30.0 // indirect
-	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.30.0 // indirect
 	go.opentelemetry.io/otel/metric v1.30.0 // indirect
-	go.opentelemetry.io/otel/sdk v1.30.0 // indirect
-	go.opentelemetry.io/otel/trace v1.30.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.30.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.3.1 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
