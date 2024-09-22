@@ -1,0 +1,9 @@
+server:
+  port: 8080
+otel:
+  service_name: "go-webserver"
+  collector_url: "localhost:4317"
+  sample_ratio: 1.0
+secrets:
+  db_password: "my_secret_db_password"
+  api_key: "my_secret_api_key"
