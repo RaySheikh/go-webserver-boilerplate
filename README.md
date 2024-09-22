@@ -23,3 +23,5 @@ This is a boilerplate for a simple web server built with Go, featuring structure
 ```bash
 git clone https://github.com/RaySheikh/go-webserver-boilerplate.git
 cd go-webserver-boilerplate
+make build
+make run
