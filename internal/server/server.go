@@ -1,44 +1,26 @@
 package server
 
 import (
-	"fmt"
+	"go-webserver-boilerplate/internal/logger"
+	"go-webserver-boilerplate/internal/telemetry"
 	"net/http"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
-	"go.opentelemetry.io/otel/trace"
 )
 
-// Server is a simple HTTP server struct
-type Server struct {
-	Port   int
-	Logger *logrus.Logger
-	Tracer trace.Tracer
-}
+func StartWebServer(port int) {
+	mux := http.NewServeMux()
+	mux.Handle("/", telemetry.HTTPHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger.Logger.WithFields(logrus.Fields{
+			"method": r.Method,
+			"url":    r.URL.String(),
+		}).Info("Received request for /")
+		w.Write([]byte("Hello, World!"))
+	})))
 
-// NewServer initializes a new server instance
-func NewServer(port int, logger *logrus.Logger, tracer trace.Tracer) *Server {
-	return &Server{
-		Port:   port,
-		Logger: logger,
-		Tracer: tracer,
+	logger.Logger.Infof("Starting web server on port %d\n", port)
+	if err := http.ListenAndServe(":"+strconv.Itoa(port), mux); err != nil {
+		logger.Logger.Fatalf("Could not start web server: %v", err)
 	}
-}
-
-// Start the HTTP server
-func (s *Server) Start() error {
-	http.HandleFunc("/", s.HelloHandler)
-	addr := fmt.Sprintf(":%d", s.Port)
-	s.Logger.Infof("Starting server on %s", addr)
-	return http.ListenAndServe(addr, nil)
-}
-
-// HelloHandler handles the root route
-func (s *Server) HelloHandler(w http.ResponseWriter, r *http.Request) {
-	ctx, span := s.Tracer.Start(r.Context(), "HelloHandler")
-	defer span.End()
-
-	s.Logger.WithContext(ctx).Info("Received request")
-
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Hello, Go Server!")
 }

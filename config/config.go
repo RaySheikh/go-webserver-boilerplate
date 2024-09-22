@@ -6,47 +6,36 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config holds configuration variables
 type Config struct {
 	Server struct {
-		Port int `json:"port"`
-	} `json:"server"`
-
-	OTel struct {
-		ServiceName  string  `json:"service_name"`
-		CollectorURL string  `json:"collector_url"`
-		SampleRatio  float64 `json:"sample_ratio"`
-	} `json:"otel"`
-
+		Port int `json:"port" mapstructure:"port"`
+	} `json:"server" mapstructure:"server"`
+	Otel struct {
+		ServiceName string  `json:"service_name" mapstructure:"service_name"`
+		SampleRatio float64 `json:"sample_ratio" mapstructure:"sample_ratio"`
+		MetricsPort int     `json:"metrics_port" mapstructure:"metrics_port"`
+	} `json:"otel" mapstructure:"otel"`
 	Secrets struct {
-		DBPassword string `json:"db_password"`
-		APIKey     string `json:"api_key"`
-	} `json:"secrets"`
+		DBPassword string `json:"db_password" mapstructure:"db_password"`
+		APIKey     string `json:"api_key" mapstructure:"api_key"`
+	} `json:"secrets" mapstructure:"secrets"`
 }
 
-// LoadConfig loads configuration from YAML and environment variables
 func LoadConfig() (*Config, error) {
-	viper.AddConfigPath("./config")
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AutomaticEnv()
-
-	// Bind environment variables and check for errors
-	if err := viper.BindEnv("secrets.db_password", "DB_PASSWORD"); err != nil {
-		log.Fatalf("Error binding environment variable DB_PASSWORD: %v", err)
-	}
-	if err := viper.BindEnv("secrets.api_key", "API_KEY"); err != nil {
-		log.Fatalf("Error binding environment variable API_KEY: %v", err)
-	}
-
-	// Read config file
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file: %v", err)
-	}
+	viper.AddConfigPath("config")
 
 	var config Config
-	if err := viper.Unmarshal(&config); err != nil {
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file: %v", err)
 		return nil, err
 	}
+
+	if err := viper.Unmarshal(&config); err != nil {
+		log.Fatalf("Unable to decode into struct: %v", err)
+		return nil, err
+	}
+
 	return &config, nil
 }

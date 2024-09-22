@@ -6,11 +6,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// SetupLogger sets up structured logging using logrus
-func SetupLogger() *logrus.Logger {
-	logger := logrus.New()
-	logger.SetFormatter(&logrus.JSONFormatter{})
-	logger.SetOutput(os.Stdout)
-	logger.SetLevel(logrus.InfoLevel)
-	return logger
+var (
+	Logger *logrus.Logger
+)
+
+func InitLogger() {
+	Logger = logrus.New()
+	Logger.SetOutput(os.Stdout)
+	Logger.SetFormatter(&logrus.JSONFormatter{}) // Use JSON format for structured logging
+	Logger.SetLevel(logrus.InfoLevel)
 }

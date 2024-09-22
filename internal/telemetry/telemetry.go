@@ -1,60 +1,33 @@
 package telemetry
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"time"
+	"go-webserver-boilerplate/internal/logger"
+	"net/http"
+	"strconv"
 
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
-	"go.opentelemetry.io/otel/sdk/resource"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
-	semconv "go.opentelemetry.io/otel/semconv/v1.17.0" // Ensure the correct version is imported
-	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/sdk/trace"
 )
 
-// SetupTracer initializes the OpenTelemetry tracer
-func SetupTracer(serviceName, collectorURL string, sampleRatio float64) (*sdktrace.TracerProvider, trace.Tracer, error) {
-	// If collectorURL is empty, skip telemetry setup and return a no-op tracer
-	if collectorURL == "" {
-		fmt.Println("Collector URL is empty, disabling telemetry.")
-		return nil, otel.Tracer(serviceName), nil
-	}
+func InitTelemetry(serviceName string) {
+	tracerProvider := trace.NewTracerProvider()
+	otel.SetTracerProvider(tracerProvider)
 
-	// Attempt to connect to the OpenTelemetry Collector
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	exporter, err := otlptracegrpc.New(ctx, otlptracegrpc.WithInsecure(), otlptracegrpc.WithEndpoint(collectorURL))
-	if err != nil {
-		log.Printf("Failed to create OTLP exporter: %v. Running without telemetry.", err)
-		return nil, otel.Tracer(serviceName), nil // Return a no-op tracer on failure
-	}
-
-	tp := sdktrace.NewTracerProvider(
-		sdktrace.WithSampler(sdktrace.TraceIDRatioBased(sampleRatio)),
-		sdktrace.WithBatcher(exporter),
-		sdktrace.WithResource(resource.NewSchemaless(
-			semconv.ServiceNameKey.String(serviceName),
-		)),
-	)
-
-	// Set the TracerProvider globally
-	otel.SetTracerProvider(tp)
-
-	fmt.Println("Telemetry setup complete. Tracing enabled.")
-	return tp, otel.Tracer(serviceName), nil
+	// Additional telemetry setup can go here (e.g., exporters)
 }
 
-func ShutdownTracer(tp *sdktrace.TracerProvider) {
-	if tp == nil {
-		return
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+func HTTPHandler(handler http.Handler) http.Handler {
+	return otelhttp.NewHandler(handler, "HTTPHandler")
+}
 
-	if err := tp.Shutdown(ctx); err != nil {
-		log.Printf("Failed to shut down TracerProvider: %v", err)
+func StartMetricsServer(port int) {
+	mux := http.NewServeMux()
+	mux.Handle("/metrics", promhttp.Handler())
+
+	logger.Logger.Infof("Starting metrics server on port %d\n", port)
+	if err := http.ListenAndServe(":"+strconv.Itoa(port), mux); err != nil {
+		logger.Logger.Fatalf("Could not start metrics server: %v", err)
 	}
 }
