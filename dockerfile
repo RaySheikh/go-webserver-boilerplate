@@ -1,4 +1,3 @@
-# Use the official Golang image to build the app
 FROM golang:1.22 AS builder
 
 WORKDIR /app
@@ -16,6 +15,8 @@ FROM alpine:latest
 WORKDIR /root/
 
 COPY --from=builder /app/go-webserver .
+
+COPY --from=builder /app/config ./config
 
 EXPOSE 8080
 
