@@ -40,7 +40,7 @@ func main() {
 
 	// Use WaitGroup to start servers
 	var wg sync.WaitGroup
-	wg.Add(1)
+	wg.Add(2)
 
 	go func() {
 		defer wg.Done()
