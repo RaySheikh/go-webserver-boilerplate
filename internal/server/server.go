@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// StartWebServer initializes the web server
+// Isnitiaizes the web server
 func StartWebServer(port int, mux *http.ServeMux) {
 	// Handle the root path
 	mux.Handle("/", telemetry.HTTPHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
