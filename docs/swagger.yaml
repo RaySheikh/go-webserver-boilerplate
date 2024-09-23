@@ -1,0 +1,50 @@
+basePath: /
+definitions:
+  server.ErrorResponse:
+    properties:
+      message:
+        description: Error message
+        type: string
+    type: object
+  server.UserResponse:
+    properties:
+      email:
+        description: User's email
+        type: string
+      id:
+        description: User ID
+        type: integer
+      name:
+        description: User's name
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server for a Go web server boilerplate.
+  title: Go Webserver API
+  version: "1.0"
+paths:
+  /user/{id}:
+    get:
+      description: Get details of a user by their ID
+      operationId: get-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.UserResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Get user by ID
+swagger: "2.0"

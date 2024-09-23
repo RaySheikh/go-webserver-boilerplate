@@ -1,0 +1,74 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server for a Go web server boilerplate.",
+        "title": "Go Webserver API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/user/{id}": {
+            "get": {
+                "description": "Get details of a user by their ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get user by ID",
+                "operationId": "get-user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.UserResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "server.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "description": "Error message",
+                    "type": "string"
+                }
+            }
+        },
+        "server.UserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "description": "User's email",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "User ID",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "User's name",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
